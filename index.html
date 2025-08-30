@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Připojit se na Discord server</title>
+    <style>
+        body {
+            background-color: #23272A; /* Tmavé pozadí */
+            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Discord logo v levém horním rohu */
+        .discord-logo-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .discord-logo-top img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        /* --- Discord Invite Card --- */
+        .invite-container {
+            position: relative;
+            z-index: 10;
+            background-color: #36393F;
+            padding: 25px 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            width: 350px;
+        }
+
+        .invite-server-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .invite-server-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .invite-server-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .invite-members {
+            font-size: 0.9em;
+            color: #B9BBBE;
+        }
+
+        .invite-members .online {
+            color: #43B581;
+            margin-right: 5px;
+        }
+
+        #start-button {
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        #start-button:hover {
+            background-color: #4752C4;
+        }
+
+        #terminal-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: #00ff00;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .cursor {
+            background-color: #00ff00;
+            animation: blink 1s step-end infinite;
+            width: 8px;
+            height: 1.2em;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            from, to { background-color: transparent; }
+            50% { background-color: #00ff00; }
+        }
+
+        #final-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        #prank-audio {
+            display: none; /* Audio element je skrytý, ale přehrává se */
+        }
+
+        #final-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background-color: #2f3136;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        #final-message h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        #final-message p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .discord-button {
+            background-color: #5865F2;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .discord-button:hover {
+            background-color: #4752C4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="discord-logo-top">
+    <img src="https://static.cdnlogo.com/logos/d/64/discord.png" alt="Discord Icon">
+    Discord
+</div>
+
+<div class="invite-container" id="invite-card">
+    <div class="invite-server-info">
+        <img src="https://www.sablio.cz/files/5612/media/product/zI0E2yl0PJuEah.jpg" alt="Sablio Logo">
+        <div>
+            <div class="invite-server-name">Náš skvělý discord server</div>
+            <div class="invite-members"><span class="online">●</span> 36 Online · 187 Členů</div>
+        </div>
+    </div>
+    <p style="font-size: 0.9em; color: #B9BBBE; text-align: left;">
+        Připojte se k nám!
+    </p>
+    <button id="start-button">Přijmout pozvánku</button>
+</div>
+
+<div id="terminal-container">
+    <div id="terminal"></div>
+</div>
+
+<div id="final-container">
+    <audio id="prank-audio" src="https://drive.google.com/uc?export=view&id=1niygjBdZhU4khkQyTF7Yf_fIkNIrOzP3" preload="auto"></audio>
+    <div id="final-message">
+        <h1>Byl jsi napálen. :D</h1>
+        <p>Tady máš Náš skvělý discord server:</p>
+        <a href="https://discord.com/invite/gSsfznn6Mh" class="discord-button" target="_blank">Připojit se na Discord</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inviteCard = document.getElementById('invite-card');
+        const startButton = document.getElementById('start-button');
+        const terminalContainer = document.getElementById('terminal-container');
+        const terminal = document.getElementById('terminal');
+        const finalContainer = document.getElementById('final-container');
+        const prankAudio = document.getElementById('prank-audio');
+        
+        const lines = [
+            "Spouštím systém [OK]",
+            "Inicializace jádra... [DOKONČENO]",
+            "Testuji systémové moduly...",
+            "   Systémové moduly v pořádku.",
+            "Probíhá navazování spojení s hostitelem...",
+            "   Spojení navázáno na IP adresu 192.168.1.134",
+            "Probíhá autentizace...",
+            "   Přístup povolen.",
+            "   Přihlášen jako uživatel: 'admin'",
+            "Hledám datové soubory...",
+            "   Nalezen klíč k dešifrování: '128-bit AES'",
+            "Probíhá stahování souboru 'Trojan.zip'...",
+            "   Stahování dokončeno [100%]",
+            "   Downloading 'this pc.zip' [100% completed]",
+            "Probíhá dešifrování dat...",
+            "   Decryption complete. Data is unencrypted.",
+            "Analýza souboru 'this pc.zip'...",
+            "   File contains personal data. Processing...",
+            "Generování reportu... [DOKONČENO]",
+            "Soubor 'this pc.zip' byl úspěšně zkopírován a odeslán.",
+            "Probíhá mazání stop...",
+            "   Logy byly vymazány. Zobrazuji výsledky..."
+        ];
+
+        const randomLines = [
+            "LOG: Připojení k serveru...",
+            "LOG: Zpracování požadavku...",
+            "LOG: Kód 200: OK",
+            "LOG: Ověřování identity...",
+            "LOG: Spuštění datového toku...",
+        ];
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        const typingSpeed = 20; 
+        const lineDelay = 800;  
+        const totalDuration = 35000; // 35 sekund v milisekundách
+
+        function typeLine(linesToType) {
+            if (lineIndex < linesToType.length) {
+                const currentLine = linesToType[lineIndex];
+                if (charIndex < currentLine.length) {
+                    terminal.innerHTML += currentLine.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(() => typeLine(linesToType), typingSpeed);
+                } else {
+                    terminal.innerHTML += '<br>';
+                    lineIndex++;
+                    charIndex = 0;
+                    if (lineIndex % 2 === 0 && lineIndex < linesToType.length - 1) {
+                        const numRandom = Math.floor(Math.random() * 2) + 1;
+                        for (let i = 0; i < numRandom; i++) {
+                            const randomLog = randomLines[Math.floor(Math.random() * randomLines.length)];
+                            terminal.innerHTML += `<span style="color: #006400;">${randomLog}</span><br>`;
+                        }
+                    }
+                    setTimeout(() => typeLine(linesToType), lineDelay);
+                }
+            }
+        }
+
+        startButton.addEventListener('click', () => {
+            inviteCard.style.display = 'none';
+            document.querySelector('.discord-logo-top').style.display = 'none';
+            terminalContainer.style.display = 'block';
+
+            lineIndex = 0;
+            charIndex = 0;
+            typeLine(lines);
+
+            setTimeout(() => {
+                terminalContainer.style.display = 'none';
+                finalContainer.style.display = 'flex';
+                
+                // Spuštění zvuku
+                prankAudio.play().catch(error => {
+                    console.log("Automatické přehrávání zvuku bylo zablokováno. Zkuste kliknout na stránku.");
+                });
+            }, totalDuration);
+        });
+    });
+</script>
+
+</body>
+</html>
